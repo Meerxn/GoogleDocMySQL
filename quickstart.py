@@ -9,7 +9,7 @@ from google.oauth2.credentials import Credentials
 SCOPES = ['https://www.googleapis.com/auth/documents.readonly']
 
 # The ID of a sample document.
-DOCUMENT_ID = '1vSckSVKBuVbFeeZ5LKPiuaotavrdjLayPXSpxay0XPo'
+DOCUMENT_ID = ''
 
 def read_paragraph_element(element):
     """Returns the text in the given ParagraphElement.
@@ -30,6 +30,7 @@ def met(element):
             elements = val.get('paragraph').get('elements')
             for elem in elements:
                 text += read_paragraph_element(elem)
+                
         elif 'table' in val:
             # The text in table cells are in nested Structural Elements and tables may be
             # nested.
@@ -38,10 +39,13 @@ def met(element):
                 cells = row.get('tableCells')
                 for cell in cells:
                     text += met(cell.get('content'))
+        
         elif 'tableOfContents' in val:
             # The text in the TOC is also in a Structural Element.
             toc = val.get('tableOfContents')
             text += met(toc.get('content'))
+        
+        
     return text
 
 
@@ -71,9 +75,20 @@ def main():
 
     # Retrieve the documents contents from the Docs service.
     document = service.documents().get(documentId=DOCUMENT_ID).execute()
-    #print(document.get('body').get('content'))
-
-    print('The Content of the document is: {}'.format(met(document.get('body').get('content'))))
+    texter = (met(document.get('body').get('content')))
+    texter = texter.replace("\n", "$")
+    res = texter.split("$")
+    ans = []
+    found = 0 # Flag to see if we found where to start scraping from.
+    # Sort out different size of ' '
+    for i in range(len(res)):
+        if res[i] != '' and found == 1:
+            ans.append(res[i].replace("\t","").strip(" "))
+        # Check in document to start scraping the data from
+        if res[i] == 'Listed among the 6 UW-Madison CALS specialists having the greatest reach through media in 2020.':
+            found = 1
+    print(found)
+    print(ans)
 
 
 if __name__ == '__main__':
