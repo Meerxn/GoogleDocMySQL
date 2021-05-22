@@ -4,12 +4,12 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-
+infoDict = {}
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/documents.readonly']
 
 # The ID of a sample document.
-DOCUMENT_ID = ''
+DOCUMENT_ID = '1C4rj3wEiI_7geRwBa82-KuzwivuDlcYb9JB27J8Zw2c'
 
 def read_paragraph_element(element):
     """Returns the text in the given ParagraphElement.
@@ -82,14 +82,36 @@ def main():
     found = 0 # Flag to see if we found where to start scraping from.
     # Sort out different size of ' '
     for i in range(len(res)):
+        if res[i] == 'Language skills':
+            break
         if res[i] != '' and found == 1:
             ans.append(res[i].replace("\t","").strip(" "))
         # Check in document to start scraping the data from
         if res[i] == 'Listed among the 6 UW-Madison CALS specialists having the greatest reach through media in 2020.':
             found = 1
-    print(found)
-    print(ans)
+    yearStart = 2010
+    for i in range (13):
+        infoDict[str(yearStart)] = ""
+        yearStart+=1    
+    start_scrape = False
+    currIndex = 0 
+    while currIndex < len(ans):
+        tempIndex = 0
 
-
+        if ans[currIndex] in infoDict.keys():
+            tempIndex = currIndex + 1
+            temp = []
+            curryear = ans[currIndex]
+            while ans[tempIndex] not in infoDict.keys() and tempIndex < len(ans) - 1:
+                if "/" in  ans[tempIndex] and len(ans[tempIndex]) <= 11:
+                    entry  = {}
+                    entry ["date:"] = ans[tempIndex]
+                    entry["event"] = ans[tempIndex+1]
+                    temp.append(entry)
+                tempIndex +=1
+            infoDict[curryear] = temp 
+        currIndex +=1
+    print(infoDict)
+    
 if __name__ == '__main__':
     main()
