@@ -89,8 +89,8 @@ def main():
         # Check in document to start scraping the data from
         if res[i] == 'Listed among the 6 UW-Madison CALS specialists having the greatest reach through media in 2020.':
             found = 1
-    yearStart = 2010
-    for i in range (13):
+    yearStart = 2008
+    for i in range (15):
         infoDict[str(yearStart)] = ""
         yearStart+=1    
     start_scrape = False
