@@ -1,4 +1,5 @@
-from __future__ import print_function
+import mysql.connector
+#from __future__ import print_function
 import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -50,6 +51,13 @@ def met(element):
 
 
 def main():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="presentations"
+    ) 
+    mycursor = mydb.cursor()
     """Shows basic usage of the Docs API.
     Prints the title of a sample document.
     """
@@ -105,13 +113,28 @@ def main():
             while ans[tempIndex] not in infoDict.keys() and tempIndex < len(ans) - 1:
                 if "/" in  ans[tempIndex] and len(ans[tempIndex]) <= 11:
                     entry  = {}
-                    entry ["date:"] = ans[tempIndex]
+                    entry ["date"] = ans[tempIndex]
                     entry["event"] = ans[tempIndex+1]
                     temp.append(entry)
                 tempIndex +=1
             infoDict[curryear] = temp 
         currIndex +=1
-    print(infoDict)
+    for k in infoDict:
+      if k != "2020":
+        for i in range (len(infoDict[k])):
+          print(infoDict[k][i]['event'])
+          sql = "INSERT INTO tester_presentation (year,date,event) VALUES (%s,%s, %s)"
+          val = (k,infoDict[k][i]['date'],infoDict[k][i]['event'])
+          mycursor.execute(sql, val)
+
+    mydb.commit()
+      
+
+
+     
     
 if __name__ == '__main__':
     main()
+
+
+
