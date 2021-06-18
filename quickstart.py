@@ -10,7 +10,7 @@ infoDict = {}
 SCOPES = ['https://www.googleapis.com/auth/documents.readonly']
 
 # The ID of a sample document.
-DOCUMENT_ID = '1C4rj3wEiI_7geRwBa82-KuzwivuDlcYb9JB27J8Zw2c'
+DOCUMENT_ID = 'YOUR GOOGLE DOC ID HERE'
 
 def read_paragraph_element(element):
     """Returns the text in the given ParagraphElement.
