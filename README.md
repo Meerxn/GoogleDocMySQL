@@ -1,6 +1,6 @@
 # GoogleDocWebScraper
 
-Google Doc Webscraper that uses DOCS API to extract data out of a document
+Google Doc Webscraper that uses DOCS API to extract data out of a document and into a SQL Database that can be used for a LAMP server
 
 ## Description
 
